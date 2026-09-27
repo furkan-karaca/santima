@@ -1,0 +1,44 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../site.config";
+import { withBase } from "../lib/url";
+---
+
+<Base title={`Страница не найдена — ${site.name}`} description="Такой страницы нет." plain>
+  <section class="nf wrap">
+    <p class="nf__code">404</p>
+    <h1 class="display nf__title">Такой страницы нет</h1>
+    <p class="nf__text">Возможно, ссылка устарела. Всё главное — на первой странице.</p>
+    <a class="btn nf__btn" href={withBase("/")}>На главную</a>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 80svh;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 1.25rem;
+    padding-block: calc(var(--header-h) + 3rem) 4rem;
+  }
+
+  .nf__code {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+  }
+
+  .nf__title {
+    font-size: var(--step-4);
+  }
+
+  .nf__text {
+    color: var(--stone);
+  }
+
+  .nf__btn {
+    margin-top: 1rem;
+  }
+</style>

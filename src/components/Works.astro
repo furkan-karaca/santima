@@ -1,0 +1,247 @@
+---
+import Photo from "./Photo.astro";
+import { publishedPortfolio } from "../lib/published";
+import { withBase } from "../lib/url";
+import w1 from "../assets/stock/work-1.jpg";
+import w2 from "../assets/stock/work-2.jpg";
+import w5 from "../assets/stock/work-5.jpg";
+import w6 from "../assets/stock/work-6.jpg";
+
+// Works come from the CRM (public/data/portfolio.json). Until the maker
+// publishes her own, four licensed stock photographs stand in, each tagged
+// «фото-заглушка» on its face.
+const published = publishedPortfolio();
+const works = published?.works ?? [];
+const SLOTS = ["a", "b", "c", "d", "e", "f"];
+const sizes = "(min-width: 60rem) 45vw, 92vw";
+
+const placeholders = [
+  { img: w1, alt: "Чёрная комбинация с кружевной вставкой на деревянной вешалке", caption: "Кружево" },
+  { img: w2, alt: "Комплект из шёлка цвета айвори с кружевом, раскладка", caption: "Комплект" },
+  { img: w5, alt: "Кружевная чашка, бретели и застёжка бюстгальтера крупным планом", caption: "Детали" },
+  { img: w6, alt: "Край золотистого кружева на белой ткани", caption: "Кружево" },
+];
+---
+
+<section id="works" class="works" aria-labelledby="works-title">
+  <div class="wrap">
+    <div class="works__head">
+      <h2 id="works-title" class="display works__title" data-split>Работы</h2>
+      <p class="works__intro" data-reveal>
+        Каждая вещь сшита для одного человека и одной фигуры. Здесь нет размерного ряда — только вещи, сшитые на заказ.
+      </p>
+    </div>
+
+    <ul
+      class:list={["works__grid", works.length > 0 && works.length <= 3 && `works__grid--n${works.length}`]}
+      data-works
+      data-updated-at={published?.updatedAt ?? ""}
+    >
+      {works.length > 0
+        ? works.map((w, i) => {
+            const p = w.photos[0]!;
+            const srcset = Object.entries(p.src)
+              .map(([width, url]) => `${withBase(url)} ${width}w`)
+              .join(", ");
+            return (
+              <li class={`work work--${SLOTS[i % SLOTS.length]}`} data-work>
+                <figure>
+                  <div class="work__frame" data-work-frame>
+                    <div class="photo work__photo">
+                      <img src={withBase(p.jpg)} srcset={srcset} sizes={sizes} width={p.width} height={p.height} alt={p.alt} loading="lazy" decoding="async" />
+                    </div>
+                  </div>
+                  <figcaption class="work__cap">
+                    <span class="label">{w.title}</span>
+                    {w.materials && <span class="work__mat">{w.materials}</span>}
+                    {works.length <= 3 && w.description && <span class="work__desc">{w.description}</span>}
+                  </figcaption>
+                </figure>
+              </li>
+            );
+          })
+        : placeholders.map((w, i) => (
+            <li class={`work work--${SLOTS[i]}`} data-work>
+              <figure>
+                <div class="work__frame" data-work-frame>
+                  <Photo src={w.img} alt={w.alt} widths={[480, 720, 960, 1280, 1600]} sizes={sizes} class="work__photo" imgClass="work__img" />
+                </div>
+                <figcaption class="work__cap">
+                  <span class="label">{w.caption}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .works {
+    padding-block: var(--section);
+    background: var(--paper);
+  }
+
+  .works__head {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .works__title {
+    font-size: var(--step-4);
+  }
+
+  .works__intro {
+    max-width: var(--measure);
+    color: var(--stone);
+  }
+
+  .works__grid {
+    display: grid;
+    gap: 3rem 1rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 59.99rem) {
+    .works__grid :global(.work) {
+      grid-column: span 2;
+    }
+
+    .works__grid :global(.work--c),
+    .works__grid :global(.work--d),
+    .works__grid :global(.work--e),
+    .works__grid :global(.work--f) {
+      grid-column: span 1;
+    }
+
+    .works__grid :global(.work--d),
+    .works__grid :global(.work--f) {
+      margin-top: 3rem;
+    }
+  }
+
+  .works__grid :global(.work__frame) {
+    overflow: hidden;
+  }
+
+  .works__grid :global(.work__photo) {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: var(--paper-2);
+    transition: transform 1.4s var(--ease-out);
+  }
+
+  .works__grid :global(.work__photo img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .works__grid :global(.work:hover .work__photo) {
+    transform: scale(1.035);
+  }
+
+  .works__grid :global(.work__cap) {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.9rem;
+    color: var(--muted);
+  }
+
+  .works__grid :global(.work__mat) {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .works__grid :global(.work__desc) {
+    max-width: 34rem;
+    margin-top: 0.5rem;
+    color: var(--stone);
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+
+  @media (min-width: 60rem) {
+    /* One work: a feature, photograph and words side by side. */
+    .works__grid--n1 :global(.work--a) {
+      grid-column: 1 / -1;
+    }
+
+    .works__grid--n1 :global(.work--a figure) {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: end;
+    }
+
+    .works__grid--n1 :global(.work--a .work__photo) {
+      aspect-ratio: 4 / 5;
+    }
+
+    /* Three works: a balanced stagger instead of the six-slot layout. */
+    .works__grid--n3 :global(.work--a) {
+      grid-column: 1 / span 7;
+    }
+    .works__grid--n3 :global(.work--b) {
+      grid-column: 9 / span 4;
+    }
+    .works__grid--n3 :global(.work--c) {
+      grid-column: 3 / span 6;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .works__head {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+
+    .works__intro {
+      justify-self: end;
+    }
+
+    .works__grid {
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(4rem, 8vw, 8rem) clamp(1rem, 2vw, 2rem);
+      align-items: start;
+    }
+
+    .works__grid :global(.work--a) {
+      grid-column: 1 / span 6;
+    }
+    .works__grid :global(.work--b) {
+      grid-column: 8 / span 5;
+      margin-top: 9rem;
+    }
+    .works__grid :global(.work--c) {
+      grid-column: 2 / span 4;
+    }
+    .works__grid :global(.work--d) {
+      grid-column: 6 / span 7;
+      margin-top: 5rem;
+    }
+    .works__grid :global(.work--e) {
+      grid-column: 1 / span 5;
+      margin-top: 2rem;
+    }
+    .works__grid :global(.work--f) {
+      grid-column: 7 / span 5;
+      margin-top: -4rem;
+    }
+
+    .works__grid :global(.work--b .work__photo),
+    .works__grid :global(.work--f .work__photo) {
+      aspect-ratio: 3 / 4;
+    }
+
+    .works__grid :global(.work--c .work__photo) {
+      aspect-ratio: 1;
+    }
+
+    .works__grid :global(.work--d .work__photo) {
+      aspect-ratio: 16 / 11;
+    }
+  }
+</style>

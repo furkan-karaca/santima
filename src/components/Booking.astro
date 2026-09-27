@@ -1,0 +1,197 @@
+---
+import Icon from "./Icon.astro";
+import { site } from "../site.config";
+import { publishedSlots, monthWord } from "../lib/published";
+import { currentMonth } from "../lib/url";
+
+// Slots come from the CRM (public/data/slots.json); site.config holds a fallback.
+const current = currentMonth(publishedSlots()?.months);
+const month = current ? monthWord(current.label) : site.slots.month;
+const total = current?.total ?? site.slots.total;
+const free = current?.free ?? site.slots.free;
+const taken = Math.max(0, total - free);
+const cells = Array.from({ length: total }, (_, i) => i < taken);
+
+const steps = [
+  { title: "Напишите в удобный мессенджер", text: "ВКонтакте, MAX, Avito или позвоните. Расскажите, что хотите сшить; можно прислать пример." },
+  { title: "Договоримся о встрече", text: "Выберем удобный день для снятия мерок." },
+  { title: "Сниму мерки и начну работу", text: "Дальше — выкройка, пошив и примерка." },
+];
+---
+
+<section id="booking" class="booking" aria-labelledby="booking-title">
+  <div class="wrap booking__inner">
+    <div class="booking__lead">
+      <h2 id="booking-title" class="display booking__title" data-split>Запись на <span data-slot-month>{month}</span></h2>
+      <p class="booking__text" data-reveal>
+        Я шью без помощников, поэтому беру ограниченное число заказов в месяц. Когда места заканчиваются,
+        запись переходит на следующий месяц.
+      </p>
+
+      <div class="slots" data-slots>
+        <p class="slots__label">
+          Свободно <strong data-slot-free>{free}</strong> из <span data-slot-total>{total}</span>
+        </p>
+        <ol class="slots__grid" aria-hidden="true">
+          {cells.map((isTaken) => <li class:list={["slot", { "slot--taken": isTaken }]} data-slot></li>)}
+        </ol>
+        <p class="slots__legend" aria-hidden="true">
+          <span class="legend legend--free">свободно</span>
+          <span class="legend legend--taken">занято</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="booking__side">
+      <ol class="how">
+        {steps.map((s, i) => (
+          <li class="how__item" data-reveal>
+            <span class="how__n" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h3 class="how__title">{s.title}</h3>
+              <p class="how__text">{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <a class="btn booking__cta" href="#contact" data-reveal>
+        Выбрать, где написать
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .booking {
+    padding-block: var(--section);
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+  }
+
+  .booking__inner {
+    display: grid;
+    gap: 4rem;
+  }
+
+  .booking__title {
+    font-size: var(--step-4);
+  }
+
+  .booking__text {
+    margin-top: 1.5rem;
+    max-width: var(--measure);
+    color: var(--stone);
+  }
+
+  .slots {
+    margin-top: 3rem;
+    max-width: 30rem;
+  }
+
+  .slots__label {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-variant-numeric: lining-nums;
+  }
+
+  .slots__label strong {
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .slots__grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  .slots__grid :global(.slot) {
+    aspect-ratio: 1;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+  }
+
+  .slots__grid :global(.slot--taken) {
+    border-color: var(--line-strong);
+    background: transparent;
+  }
+
+  .slots__legend {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.9rem;
+    font-size: var(--step--1);
+    color: var(--stone);
+  }
+
+  .legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend::before {
+    content: "";
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+  }
+
+  .legend--taken::before {
+    border-color: var(--line-strong);
+    background: transparent;
+  }
+
+  .how {
+    display: grid;
+    gap: 2rem;
+    border-top: 1px solid var(--line-strong);
+    padding-top: 2rem;
+  }
+
+  .how__item {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+  }
+
+  .how__n {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1.1;
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+  }
+
+  .how__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .how__text {
+    margin-top: 0.35rem;
+    color: var(--stone);
+  }
+
+  .booking__cta {
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+
+  @media (min-width: 60rem) {
+    .booking__inner {
+      grid-template-columns: 7fr 5fr;
+      gap: clamp(3rem, 8vw, 9rem);
+      align-items: end;
+    }
+
+    .booking__cta {
+      width: auto;
+    }
+  }
+</style>

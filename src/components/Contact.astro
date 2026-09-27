@@ -1,0 +1,190 @@
+---
+import Icon from "./Icon.astro";
+import { site } from "../site.config";
+
+// The first channel is the main way in; the rest are equal alternatives.
+// Telegram stays last: it has been unreliable in Russia since February 2026.
+const [primary, ...others] = site.channels;
+const external = (href: string) => href.startsWith("http");
+---
+
+<section id="contact" class="contact on-ink" aria-labelledby="contact-title">
+  <div class="wrap contact__inner">
+    <h2 id="contact-title" class="display contact__title" data-split>
+      Начнём <em>с мерок</em>
+    </h2>
+    <p class="contact__lede" data-reveal>
+      Напишите, где вам удобно: договоримся о встрече, обсудим модель и кружево.
+    </p>
+
+    <div class="contact__cta" data-reveal>
+      <a
+        class="btn btn--light contact__main"
+        href={primary.href}
+        target={external(primary.href) ? "_blank" : undefined}
+        rel={external(primary.href) ? "noopener" : undefined}
+        data-magnetic
+      >
+        <Icon name={primary.id} />
+        {primary.cta ?? primary.label}
+      </a>
+    </div>
+
+    <ul class="channels" data-reveal>
+      {others.map((c) => (
+        <li>
+          <a
+            class="channel"
+            href={c.href}
+            target={external(c.href) ? "_blank" : undefined}
+            rel={external(c.href) ? "noopener" : undefined}
+          >
+            <Icon name={c.id} />
+            <span class="channel__text">
+              <span class="channel__label">{c.label}</span>
+              {c.note && <span class="channel__note">{c.note}</span>}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <p class="contact__place" data-reveal>
+      <Icon name="pin" />
+      {site.city} · встречи для снятия мерок по договорённости
+    </p>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    padding-block: calc(var(--section) * 1.2) var(--section);
+    background: var(--ink);
+    color: var(--paper);
+    overflow: clip;
+  }
+
+  .contact::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: rgb(224 225 221 / 0.12);
+  }
+
+  .contact__inner {
+    display: grid;
+    justify-items: start;
+  }
+
+  .contact__title {
+    font-size: clamp(3.25rem, 1.8rem + 7vw, 6rem);
+    line-height: 0.98;
+    max-width: 9ch;
+  }
+
+  .contact__lede {
+    margin-top: 1.75rem;
+    max-width: 30rem;
+    color: rgb(224 225 221 / 0.75);
+    font-size: var(--step-1);
+  }
+
+  .contact__cta {
+    margin-top: 2.75rem;
+    width: 100%;
+  }
+
+  .contact__main {
+    width: 100%;
+    min-height: 4rem;
+  }
+
+  .channels {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 3rem;
+    width: 100%;
+    border-top: 1px solid rgb(224 225 221 / 0.14);
+  }
+
+  .channels li {
+    border-bottom: 1px solid rgb(224 225 221 / 0.14);
+  }
+
+  .channel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4.25rem;
+    color: var(--paper);
+    text-decoration: none;
+    transition: color 0.4s var(--ease-out);
+  }
+
+  .channel:hover,
+  .channel:focus-visible {
+    color: var(--accent-on-ink);
+  }
+
+  .channel :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+    color: var(--accent-on-ink);
+    flex: none;
+  }
+
+  .channel__text {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .channel__label {
+    font-size: var(--step-1);
+    letter-spacing: 0.01em;
+  }
+
+  .channel__note {
+    font-size: var(--step--1);
+    color: rgb(224 225 221 / 0.62);
+  }
+
+  .contact__place {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+    color: rgb(224 225 221 / 0.66);
+    font-size: var(--step--1);
+  }
+
+  .contact__place :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--accent-on-ink);
+  }
+
+  @media (min-width: 48rem) {
+    .contact__cta {
+      width: auto;
+    }
+
+    .contact__main {
+      width: auto;
+      padding-inline: 3rem;
+    }
+
+    .channels {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 3rem;
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .channels {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

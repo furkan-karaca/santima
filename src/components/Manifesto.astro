@@ -1,0 +1,39 @@
+---
+// The statement inks itself in, word by word, as it is read.
+---
+
+<section class="manifesto" aria-label="О подходе">
+  <div class="wrap manifesto__inner">
+    <p class="display manifesto__text" data-ink>
+      Не размер из таблицы, а ваши сантиметры. Я встречаюсь с каждой клиенткой, снимаю мерки и строю
+      выкройку под одну фигуру — <em>вашу</em>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    padding-block: var(--section);
+    background: var(--paper);
+  }
+
+  .manifesto__inner {
+    display: grid;
+  }
+
+  .manifesto__text {
+    font-size: var(--step-3);
+    line-height: 1.12;
+    max-width: 22ch;
+    justify-self: center;
+    text-align: left;
+  }
+
+  @media (min-width: 60rem) {
+    .manifesto__text {
+      max-width: 24ch;
+      margin-left: 12%;
+      justify-self: start;
+    }
+  }
+</style>

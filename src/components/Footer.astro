@@ -1,0 +1,71 @@
+---
+import { site } from "../site.config";
+import { withBase } from "../lib/url";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer on-ink">
+  <div class="wrap footer__inner">
+    <p class="footer__mark">{site.name}</p>
+    <div class="footer__meta">
+      <p>
+        © {year} {site.name} · {site.city}
+      </p>
+      <p>
+        {site.seller.status}: {site.seller.fullName}, ИНН {site.seller.inn}
+      </p>
+      <p>
+        <a href={withBase("/privacy")}>Политика конфиденциальности</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: rgb(224 225 221 / 0.6);
+    padding-block: 3rem calc(env(safe-area-inset-bottom, 0px) + 3rem);
+    font-size: var(--step--1);
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .footer__mark {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+
+  .footer__meta {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .footer__meta a {
+    color: rgb(224 225 221 / 0.85);
+  }
+
+  .footer__meta a:hover,
+  .footer__meta a:focus-visible {
+    color: var(--accent-on-ink);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__inner {
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      gap: 3rem;
+    }
+
+    .footer__meta {
+      justify-items: end;
+      text-align: right;
+    }
+  }
+</style>

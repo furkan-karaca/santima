@@ -1,0 +1,306 @@
+---
+import Icon from "./Icon.astro";
+import { site } from "../site.config";
+import { withBase } from "../lib/url";
+
+interface Props {
+  plain?: boolean;
+}
+const { plain = false } = Astro.props;
+const base = plain ? withBase("/") : "";
+const links = [
+  { href: `${base}#works`, label: "Работы" },
+  { href: `${base}#process`, label: "Как я шью" },
+  { href: `${base}#booking`, label: "Запись" },
+  { href: `${base}#contact`, label: "Контакты" },
+];
+---
+
+<header class:list={["site-header", { "is-solid": plain }]} data-header>
+  <div class="bar">
+    <nav class="nav nav--left" aria-label="Основная навигация">
+      {links.slice(0, 2).map((l) => <a href={l.href} class="nav__link">{l.label}</a>)}
+    </nav>
+
+    <button class="menu-btn" type="button" aria-label="Открыть меню" aria-haspopup="dialog" data-menu-open>
+      <Icon name="menu" />
+    </button>
+
+    <a href={withBase("/")} class="wordmark" aria-label={`${site.name}, на главную`}>
+      <span aria-hidden="true">{site.name}</span>
+    </a>
+
+    <div class="cluster">
+      <nav class="nav nav--right" aria-label="Запись и контакты">
+        {links.slice(2).map((l) => <a href={l.href} class="nav__link">{l.label}</a>)}
+      </nav>
+      <a class="tg" href={`${base}#contact`} aria-label="Связаться с мастерской">
+        <Icon name="message" />
+      </a>
+    </div>
+  </div>
+</header>
+
+<dialog class="menu" data-menu aria-label="Меню">
+  <div class="menu__top">
+    <span class="menu__mark">{site.name}</span>
+    <button class="menu__close" type="button" aria-label="Закрыть меню" data-menu-close>
+      <Icon name="close" />
+    </button>
+  </div>
+  <nav class="menu__nav" aria-label="Меню сайта">
+    {links.map((l) => (
+      <a href={l.href} class="menu__link" data-menu-link>
+        {l.label}
+      </a>
+    ))}
+  </nav>
+  <a class="btn btn--light menu__cta" href={`${base}#contact`} data-menu-link>
+    Записаться на мерки
+  </a>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("[data-menu]");
+  const openBtn = document.querySelector<HTMLButtonElement>("[data-menu-open]");
+  const closeBtn = document.querySelector<HTMLButtonElement>("[data-menu-close]");
+
+  openBtn?.addEventListener("click", () => {
+    dialog?.showModal();
+    document.documentElement.classList.add("menu-open");
+  });
+  const close = () => {
+    dialog?.close();
+  };
+  closeBtn?.addEventListener("click", close);
+  dialog?.addEventListener("close", () => document.documentElement.classList.remove("menu-open"));
+  dialog?.querySelectorAll("[data-menu-link]").forEach((a) => a.addEventListener("click", close));
+</script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    color: var(--paper);
+    padding-top: env(safe-area-inset-top, 0px);
+    transition:
+      color 0.5s var(--ease-out),
+      background-color 0.5s var(--ease-out),
+      transform 0.6s var(--ease-out),
+      box-shadow 0.5s var(--ease-out);
+  }
+
+  .site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -2.5rem;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgb(13 27 42 / 0.5), rgb(13 27 42 / 0));
+    transition: opacity 0.5s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .site-header.is-solid {
+    color: var(--ink);
+    background-color: var(--paper);
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .site-header.is-solid::before {
+    opacity: 0;
+  }
+
+  .site-header.is-hidden {
+    transform: translateY(-110%);
+  }
+
+  .bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: var(--header-h);
+    padding-inline: var(--gutter);
+    max-width: 88rem;
+    margin-inline: auto;
+  }
+
+  .wordmark {
+    grid-column: 2;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    margin-right: -0.34em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav {
+    display: none;
+    gap: 2.25rem;
+  }
+
+  .nav--left {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .cluster {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 2.25rem;
+  }
+
+  .nav__link {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding-block: 0.75rem;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 72%;
+    transition: background-size 0.5s var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .menu-btn,
+  .tg {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  .menu-btn {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    margin-left: -0.6rem;
+  }
+
+  .tg {
+    margin-right: -0.6rem;
+    transition: color 0.4s var(--ease-out);
+  }
+
+  .tg:hover {
+    color: var(--accent-on-ink);
+  }
+
+  .is-solid .tg:hover {
+    color: var(--accent);
+  }
+
+  .menu-btn :global(svg),
+  .tg :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  @media (min-width: 60rem) {
+    .nav {
+      display: flex;
+    }
+    .menu-btn {
+      display: none;
+    }
+    .wordmark {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Full-screen menu */
+  .menu {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: calc(env(safe-area-inset-top, 0px) + 0.75rem) var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 2rem);
+    border: 0;
+    background: var(--ink);
+    color: var(--paper);
+    flex-direction: column;
+  }
+
+  .menu[open] {
+    display: flex;
+  }
+
+  .menu::backdrop {
+    background: rgb(13 27 42 / 0.6);
+  }
+
+  .menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 3.5rem;
+  }
+
+  .menu__mark {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+  }
+
+  .menu__close {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.6rem;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .menu__close :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .menu__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-block: auto;
+  }
+
+  .menu__link {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+    line-height: 1.15;
+    text-decoration: none;
+  }
+
+  .menu__link:hover,
+  .menu__link:focus-visible {
+    color: var(--accent-on-ink);
+    font-style: italic;
+  }
+
+  .menu__cta {
+    width: 100%;
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Manifesto from "../components/Manifesto.astro";
+import Process from "../components/Process.astro";
+import Works from "../components/Works.astro";
+import Booking from "../components/Booking.astro";
+import About from "../components/About.astro";
+import Contact from "../components/Contact.astro";
+import { site } from "../site.config";
+---
+
+<Base
+  title={`${site.name} — бельё по вашим меркам, ${site.city}`}
+  description="Пошив белья по индивидуальным меркам в Екатеринбурге. Снимаю мерки лично и шью каждую вещь под вас. Запись ВКонтакте, в MAX, на Avito или по телефону."
+>
+  <Hero />
+  <Manifesto />
+  <Process />
+  <Works />
+  <Booking />
+  <About />
+  <Contact />
+</Base>

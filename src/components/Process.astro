@@ -1,0 +1,252 @@
+---
+import Photo from "./Photo.astro";
+import measureImg from "../assets/stock/process-measure.jpg";
+import patternImg from "../assets/stock/process-pattern.jpg";
+import sewingImg from "../assets/stock/process-sewing.jpg";
+import fittingImg from "../assets/stock/process-fitting.jpg";
+
+// TODO (owners): confirm step 4 — that a fitting and adjustment is part of every order.
+const steps = [
+  {
+    n: "1",
+    title: "Встреча и мерки",
+    text: "Знакомимся, обсуждаем модель, кружево и цвет. Я снимаю мерки — не размер, а ваши сантиметры.",
+    img: measureImg,
+    alt: "Сантиметровая лента",
+  },
+  {
+    n: "2",
+    title: "Выкройка",
+    text: "Строю выкройку по вашим меркам, а не по размерной сетке. Каждая линия — под вашу фигуру.",
+    img: patternImg,
+    alt: "Выкройка и ткань на столе",
+  },
+  {
+    n: "3",
+    title: "Пошив",
+    text: "Крою и шью каждую вещь от начала до конца: одни руки от первого шва до последнего.",
+    img: sewingImg,
+    alt: "Швейная машина и кружево",
+  },
+  {
+    n: "4",
+    title: "Примерка",
+    text: "Примеряем готовое изделие и, если нужно, подгоняем, пока бельё не сядет так, как должно.",
+    img: fittingImg,
+    alt: "Изделие на манекене во время примерки",
+  },
+];
+
+// Centimetre tape: a tick every centimetre, a number every ten.
+const cm = 120;
+const ticks = Array.from({ length: cm + 1 }, (_, i) => i);
+---
+
+<section id="process" class="process" aria-labelledby="process-title" data-process>
+  <div class="process__pin" data-process-pin>
+    <div class="wrap process__head">
+      <h2 id="process-title" class="display process__title" data-split>От мерок до примерки</h2>
+      <p class="process__readout" aria-hidden="true">
+        <span data-cm>0</span>&thinsp;см
+      </p>
+    </div>
+
+    <div class="tape" aria-hidden="true">
+      <div class="tape__strip" data-tape>
+        {ticks.map((t) => (
+          <span class:list={["tape__tick", { "tape__tick--ten": t % 10 === 0, "tape__tick--five": t % 5 === 0 && t % 10 !== 0 }]}>
+            {t % 10 === 0 && <span class="tape__num">{t}</span>}
+          </span>
+        ))}
+      </div>
+      <span class="tape__needle"></span>
+    </div>
+
+    <ol class="process__track" data-process-track>
+      {steps.map((s) => (
+        <li class="step" data-step>
+          <Photo
+            src={s.img}
+            alt={s.alt}
+            widths={[480, 720, 960, 1280]}
+            sizes="(min-width: 60rem) 30vw, 90vw"
+            class="step__photo"
+            imgClass="step__img"
+          />
+          <div class="step__body">
+            <p class="step__n" aria-hidden="true">{s.n}</p>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="step__text">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process {
+    position: relative;
+    background: var(--greige);
+    padding-block: var(--section) calc(var(--section) * 0.75);
+    overflow: clip;
+  }
+
+  .process__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .process__title {
+    font-size: var(--step-3);
+    max-width: 12ch;
+  }
+
+  .process__readout {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums lining-nums;
+    white-space: nowrap;
+  }
+
+  /* The centimetre tape, navy on the greige field */
+  .tape {
+    position: relative;
+    height: 3.25rem;
+    margin-block: 2.5rem 3rem;
+    border-block: 1px solid rgb(13 27 42 / 0.35);
+    background: linear-gradient(to bottom, rgb(13 27 42 / 0.07), rgb(13 27 42 / 0.02));
+    overflow: hidden;
+  }
+
+  .tape__strip {
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+    padding-left: var(--gutter);
+    width: max-content;
+    will-change: transform;
+  }
+
+  .tape__tick {
+    position: relative;
+    flex: none;
+    width: 1.5rem;
+    height: 0.6rem;
+    border-left: 1px solid var(--ink);
+  }
+
+  .tape__tick--five {
+    height: 1rem;
+  }
+
+  .tape__tick--ten {
+    height: 1.4rem;
+    border-left-width: 1.5px;
+  }
+
+  .tape__num {
+    position: absolute;
+    left: 0.3rem;
+    top: 1.45rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tape__needle {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: var(--gutter);
+    width: 2px;
+    background: var(--ink);
+  }
+
+  .process__track {
+    display: grid;
+    gap: 3.5rem;
+    padding-inline: var(--gutter);
+    counter-reset: step;
+  }
+
+  .step {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .step :global(.step__photo) {
+    aspect-ratio: 4 / 5;
+  }
+
+  .step__n {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 300;
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+  }
+
+  .step__title {
+    margin-top: 0.5rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .step__text {
+    margin-top: 0.75rem;
+    max-width: 30rem;
+    color: var(--stone);
+  }
+
+  @media (min-width: 60rem) {
+    .process {
+      padding-block: 0;
+    }
+
+    .process__pin {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100svh;
+      padding-block: calc(var(--header-h) + 1.25rem) 1.5rem;
+    }
+
+    .tape {
+      margin-block: 1.25rem 1.75rem;
+    }
+
+    .process__track {
+      display: flex;
+      gap: clamp(2.5rem, 4vw, 5rem);
+      width: max-content;
+      padding-right: 20vw;
+      will-change: transform;
+    }
+
+    .step {
+      width: clamp(20rem, 28vw, 27rem);
+      align-content: start;
+    }
+
+    .step__body {
+      order: 1;
+    }
+
+    /* Words first; the photo gives way so the title and text always fit the pinned screen. */
+    .step :global(.step__photo) {
+      order: 2;
+      aspect-ratio: auto;
+      height: clamp(9rem, calc(100svh - 36rem), 28rem);
+    }
+  }
+</style>

@@ -1,0 +1,343 @@
+/* Santima — boutique lingerie standard, executed straight.
+   Palette pinned by the owners (2026-09-27): night navy #0D1B2A, deep navy #1B263B,
+   slate #415A77 (accent on light), pale grey #E0E1DD (paper), greige #C7BEB6
+   (accent on navy, warm field). Slate is never text on navy; greige is never text on light. */
+
+:root {
+  --ink: #0d1b2a;
+  --ink-2: #1b263b;
+  --stone: #1b263b;
+  --muted: #415a77;
+  --line: #c5cace;
+  --line-strong: #aeb6bf;
+  --paper: #e0e1dd;
+  --paper-2: #d3d0ca;
+  --accent: #415a77;
+  --accent-on-ink: #c7beb6;
+  --ink-soft: #7d8da0;
+  /* Warm greige field for the making sections; navy text only on it. */
+  --greige: #c7beb6;
+
+  /* --font-display and --font-body come from Astro's Fonts API (self-hosted);
+     redefining them here would override the generated family names. */
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --step-3: clamp(2rem, 1.35rem + 2.8vw, 3.5rem);
+  --step-4: clamp(2.75rem, 1.6rem + 5vw, 6rem);
+
+  --gutter: clamp(1.25rem, 0.6rem + 3vw, 3rem);
+  --section: clamp(5rem, 3rem + 8vw, 10rem);
+  --measure: 34rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --header-h: 4.5rem;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--header-h);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Browser surfaces carry the palette too. */
+::selection {
+  background: var(--ink);
+  color: var(--accent-on-ink);
+}
+
+input,
+textarea {
+  caret-color: var(--accent);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.on-ink :focus-visible {
+  outline-color: var(--accent-on-ink);
+}
+
+html {
+  scrollbar-color: var(--stone) var(--paper-2);
+  scrollbar-width: thin;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.display em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.on-ink .display em {
+  color: var(--accent-on-ink);
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -4rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Buttons: square-cornered, the house standard. */
+.btn {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--paper);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  min-height: 3.5rem;
+  padding: 0 2rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--btn-bg);
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    color 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.btn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+}
+
+.btn--light {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+}
+
+.btn--light::before {
+  background: var(--accent-on-ink);
+}
+
+.btn--light:hover,
+.btn--light:focus-visible {
+  color: var(--ink);
+  border-color: var(--accent-on-ink);
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 78%;
+  transition: background-size 0.6s var(--ease-out);
+}
+
+.text-link:hover,
+.text-link:focus-visible {
+  background-size: 100% 1px;
+}
+
+.text-link svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--accent);
+}
+
+.on-ink .text-link svg {
+  color: var(--accent-on-ink);
+}
+
+/* Placeholder photo tag: visible until the maker's own photos replace stock. */
+.ph-tag {
+  position: absolute;
+  z-index: 3;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.55rem;
+  background: rgb(13 27 42 / 0.72);
+  color: var(--paper);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Motion gating: content is visible by default. Only when motion is allowed
+   and the script has not failed does the page start from hidden states. */
+/* Only the first viewport's intro starts hidden, and it plays at once.
+   Everything further down is readable before any animation runs. */
+html.motion :is([data-hero-title], [data-hero-fade]) {
+  opacity: 0;
+}
+
+html.motion [data-hero-media] {
+  clip-path: inset(9% 7% 9% 7%);
+}
+
+html.motion [data-work-frame] {
+  clip-path: inset(100% 0% 0% 0%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
