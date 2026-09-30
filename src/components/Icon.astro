@@ -1,7 +1,7 @@
 ---
 // One drawn icon set: 1.5px stroke, round joins, 24px grid.
 interface Props {
-  name: "telegram" | "arrow-right" | "arrow-down" | "phone" | "vk" | "menu" | "close" | "pin" | "message" | "max" | "avito" | "sms";
+  name: "telegram" | "arrow-right" | "arrow-down" | "phone" | "vk" | "menu" | "close" | "pin" | "message" | "max" | "avito" | "sms" | "plus";
   class?: string;
 }
 const { name, class: className } = Astro.props;
@@ -26,6 +26,7 @@ const { name, class: className } = Astro.props;
   )}
   {name === "arrow-right" && <path d="M4 12h15m-5-5 5 5-5 5" />}
   {name === "arrow-down" && <path d="M12 4v15m-5-5 5 5 5-5" />}
+  {name === "plus" && <path d="M12 5v14M5 12h14" />}
   {name === "phone" && (
     <path d="M5.2 3.8h3l1.6 4.1-2 1.3a11.6 11.6 0 0 0 7 7l1.3-2 4.1 1.6v3a1.9 1.9 0 0 1-2 1.9C10.4 20.2 3.8 13.6 3.3 5.8a1.9 1.9 0 0 1 1.9-2Z" />
   )}

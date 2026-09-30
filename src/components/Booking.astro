@@ -13,9 +13,18 @@ const taken = Math.max(0, total - free);
 const cells = Array.from({ length: total }, (_, i) => i < taken);
 
 const steps = [
-  { title: "Напишите в удобный мессенджер", text: "ВКонтакте, MAX, Avito или позвоните. Расскажите, что хотите сшить; можно прислать пример." },
-  { title: "Договоримся о встрече", text: "Выберем удобный день для снятия мерок." },
-  { title: "Сниму мерки и начну работу", text: "Дальше — выкройка, пошив и примерка." },
+  { title: "Свяжитесь со мной", text: "ВКонтакте, в MAX, на Avito или по телефону. Расскажите, что хотите сшить; можно прислать пример." },
+  { title: "Пришлите мерки", text: "Четыре обхвата сантиметровой лентой. Как их снять — ниже." },
+  { title: "Начну работу", text: "Выкройка и пошив по вашим меркам." },
+];
+
+// How to measure at home: the four measurements every order needs
+// (the CRM's required set). Юля asks for more when a model needs them.
+const measures = [
+  { name: "Обхват под грудью", how: "Лента плотно прилегает сразу под грудью и идёт горизонтально по спине. Мерку снимайте на выдохе." },
+  { name: "Обхват груди", how: "По самым выступающим точкам груди, не затягивая ленту." },
+  { name: "Обхват талии", how: "По самому узкому месту талии, не втягивая живот." },
+  { name: "Обхват бёдер", how: "По самым выступающим точкам ягодиц." },
 ];
 ---
 
@@ -54,8 +63,34 @@ const steps = [
           </li>
         ))}
       </ol>
+
+      <details class="measure" data-reveal>
+        <summary class="measure__summary">
+          Как снять мерки
+          <Icon name="plus" class="measure__icon" />
+        </summary>
+        <div class="measure__body">
+          <p class="measure__note">
+            Снимайте мерки в тонком белье без поролона, стоя ровно и опустив руки. Лента идёт горизонтально,
+            без перекрутов, и прилегает к телу, не врезаясь; удобнее, если кто-то поможет.
+          </p>
+          <dl class="measure__list">
+            {measures.map((m) => (
+              <div class="measure__row">
+                <dt class="measure__name">{m.name}</dt>
+                <dd class="measure__how">{m.how}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="measure__note">
+            Если для модели понадобятся другие мерки, я напишу, какие. В Екатеринбурге можно приехать ко мне на
+            замер.
+          </p>
+        </div>
+      </details>
+
       <a class="btn booking__cta" href="#contact" data-reveal>
-        Выбрать, где написать
+        Написать мне
         <Icon name="arrow-right" />
       </a>
     </div>
@@ -176,6 +211,87 @@ const steps = [
   .how__text {
     margin-top: 0.35rem;
     color: var(--stone);
+  }
+
+  /* How to measure: a quiet disclosure under the steps, hairline-ruled like the rest. */
+  .measure {
+    margin-top: 2rem;
+    border-block: 1px solid var(--line-strong);
+  }
+
+  .measure__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.25rem;
+    padding-block: 0.75rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.2;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .measure__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .measure__summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .measure :global(.measure__icon) {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--accent);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .measure[open] :global(.measure__icon) {
+    transform: rotate(45deg);
+  }
+
+  .measure__body {
+    display: grid;
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .measure__note {
+    color: var(--stone);
+  }
+
+  .measure__list {
+    display: grid;
+  }
+
+  .measure__row {
+    display: grid;
+    gap: 0.2rem;
+    padding-block: 0.8rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .measure__row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .measure__name {
+    font-weight: 500;
+  }
+
+  .measure__how {
+    margin: 0;
+    color: var(--stone);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .measure :global(.measure__icon) {
+      transition: none;
+    }
   }
 
   .booking__cta {

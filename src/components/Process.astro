@@ -5,12 +5,14 @@ import patternImg from "../assets/stock/process-pattern.jpg";
 import sewingImg from "../assets/stock/process-sewing.jpg";
 import fittingImg from "../assets/stock/process-fitting.jpg";
 
-// TODO (owners): confirm step 4 — that a fitting and adjustment is part of every order.
+// Orders run online: the customer sends her measurements (an in-person measuring
+// in Yekaterinburg is possible but not advertised, per Юля 2026-09-30).
+// TODO (owners): confirm step 4 — how a finished piece is handed over or sent.
 const steps = [
   {
     n: "1",
-    title: "Встреча и мерки",
-    text: "Знакомимся, обсуждаем модель, кружево и цвет. Я снимаю мерки — не размер, а ваши сантиметры.",
+    title: "Мерки",
+    text: "Обсуждаем модель, кружево и цвет. Вы присылаете мерки.",
     img: measureImg,
     alt: "Сантиметровая лента",
   },
@@ -24,16 +26,16 @@ const steps = [
   {
     n: "3",
     title: "Пошив",
-    text: "Крою и шью каждую вещь от начала до конца: одни руки от первого шва до последнего.",
+    text: "Крою и шью каждую вещь: одни руки от первого шва до последнего.",
     img: sewingImg,
     alt: "Швейная машина и кружево",
   },
   {
     n: "4",
-    title: "Примерка",
-    text: "Примеряем готовое изделие и, если нужно, подгоняем, пока бельё не сядет так, как должно.",
+    title: "Готово",
+    text: "Напишу вам, и договоримся, как передать заказ.",
     img: fittingImg,
-    alt: "Изделие на манекене во время примерки",
+    alt: "Готовое изделие на манекене",
   },
 ];
 
@@ -45,7 +47,7 @@ const ticks = Array.from({ length: cm + 1 }, (_, i) => i);
 <section id="process" class="process" aria-labelledby="process-title" data-process>
   <div class="process__pin" data-process-pin>
     <div class="wrap process__head">
-      <h2 id="process-title" class="display process__title" data-split>От мерок до примерки</h2>
+      <h2 id="process-title" class="display process__title" data-split>От мерок до готового белья</h2>
       <p class="process__readout" aria-hidden="true">
         <span data-cm>0</span>&thinsp;см
       </p>
